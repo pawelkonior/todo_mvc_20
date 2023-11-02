@@ -1,21 +1,17 @@
 import './App.scss';
-import {useEffect, useState} from "react";
 import {getId} from "./helpers/helpers.js";
 import {Headline} from "./components/Headline.jsx";
 import TodoAdd from "./components/TodoAdd.jsx";
 import TodoList from "./components/TodoList.jsx";
 import Counter from "./components/Counter.jsx";
 import {DeleteAllBtn} from "./components/DeleteAllBtn.jsx";
+import useLocalStorage from "./hooks/useLocalStorage.js";
+import {useState} from "react";
 
 
 function App() {
     const [todo, setTodo] = useState('');
-    const [todos, setTodos] = useState(getFromLocalStorage());
-
-    useEffect(() => {
-        updateLocalStorage(todos);
-    }, [todos]);
-
+    const [todos, setTodos] = useLocalStorage('tasks');
 
     const handleAddTodo = (evt) => {
         if (evt.key === "Enter" && todo.trim().length >= 3) {
@@ -41,17 +37,6 @@ function App() {
         setTodos(todos.filter((task) => task.status !== 'done'));
     };
 
-    const updateLocalStorage = (data) => {
-        localStorage.setItem('todos', JSON.stringify(data));
-    }
-
-    function getFromLocalStorage() {
-        const data = localStorage.getItem('todos');
-        if (data !== null) {
-            return JSON.parse(data);
-        }
-        return [];
-    }
 
     return (
         <div className="todoapp">
